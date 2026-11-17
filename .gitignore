@@ -1,0 +1,25 @@
+node_modules/
+dist/
+coverage/
+src-tauri/target/
+tools/*/target/
+.env
+.env.*
+!.env.example
+*.log
+.DS_Store
+.netlify/
+
+# Generated data/diagnostics exports
+myLFR-*.json
+myLFR-*.xlsx
+
+# Generated release artifacts and signing material
+release/
+*.key
+*.pem
+*.pfx
+*.p12
+
+# Tauri-generated permission schemas, rebuilt on every build
+src-tauri/gen/schemas/

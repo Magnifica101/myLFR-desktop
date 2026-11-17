@@ -1,0 +1,35 @@
+name: Report a problem
+description: Something in myLFR Desktop is not working as expected.
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        **Reports here are public.** Do not include business names, permit
+        holders, vessels, landing details, or your database or backup files.
+
+        If the problem could let someone get around update signing, backup
+        checks, or catalogue signing, do not report it here. Use
+        [private vulnerability reporting](https://github.com/Magnifica101/myLFR-desktop/security/advisories/new)
+        instead.
+  - type: input
+    id: version
+    attributes:
+      label: myLFR version
+      description: Shown on the Settings page. Filled in automatically when you use Report on GitHub in the app.
+      placeholder: "0.7.0"
+    validations:
+      required: true
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: What you did, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: problem-report
+    attributes:
+      label: Problem report
+      description: In myLFR, open Settings, choose Copy problem report, and paste it here. It contains no record contents or file locations.
+      render: json

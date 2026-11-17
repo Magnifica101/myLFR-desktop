@@ -1,0 +1,51 @@
+{
+  "name": "mylfr-desktop",
+  "private": true,
+  "version": "0.8.0",
+  "license": "CC0-1.0",
+  "type": "module",
+  "engines": {
+    "node": ">=22 <23"
+  },
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "tauri": "tauri",
+    "desktop:dev": "tauri dev --config src-tauri/tauri.dev.conf.json",
+    "desktop:build": "tauri build",
+    "smoke:windows:pilot": "node scripts/windows-pilot-smoke.mjs",
+    "security:policy": "node scripts/check-security-policy.mjs",
+    "catalogue:validate": "node scripts/validate-catalogue.mjs",
+    "release:prepare": "node scripts/prepare-release.mjs"
+  },
+  "dependencies": {
+    "@tanstack/react-query": "^5.104.2",
+    "@tauri-apps/api": "^2.12.1",
+    "exceljs": "^4.4.0",
+    "lucide-react": "^1.51.0",
+    "pdfmake": "^0.2.20",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-router-dom": "^7.18.4"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.12.1",
+    "@testing-library/jest-dom": "^6.9.1",
+    "@testing-library/react": "^16.3.3",
+    "@testing-library/user-event": "^14.6.7",
+    "@types/pdfmake": "^0.2.9",
+    "@types/react": "^19.2.17",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^6.0.2",
+    "jsdom": "^29.1.1",
+    "typescript": "^7.0.2",
+    "vite": "~8.2.6",
+    "vitest": "^4.1.12"
+  },
+  "overrides": {
+    "uuid": "11.1.1"
+  }
+}
