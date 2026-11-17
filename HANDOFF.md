@@ -110,9 +110,8 @@ Preserve these product boundaries:
 
 ## Before making the repository public
 
-The repository is currently private. Work through this list in order, and do
-not make the repository public until every item above "Make the repository
-public" is ticked.
+The repository was made public on 2026-11-18, after every item below was
+worked through in order. Keep this list as the record of how it was done.
 
 - [x] **Full-history secret scan.** Done 2026-10-04 with gitleaks 8.30.1 over
   every ref (98 commits) plus a manual pattern search for key files, `.env`
@@ -126,7 +125,7 @@ public" is ticked.
   ignored, unused platform icons removed, the finished security review
   removed, this file trimmed to its rules, and personal paths and details
   removed from the documents.
-- [ ] **Publish a fresh history.** Decided 2026-10-04: the public repository
+- [x] **Publish a fresh history.** Decided 2026-10-04: the public repository
   starts from a single commit of the cleaned files, so earlier versions of the
   documents and the personal commit email are not published. Do this on the day
   of going public:
@@ -145,19 +144,39 @@ public" is ticked.
   5. Run the release workflow in pilot mode once to prove the signing setup
      before relying on it.
   6. Point both local checkouts at the new repository.
-- [ ] **Make the repository public.**
-- [ ] **Immediately enable private vulnerability reporting:** repository
+
+  Done 2026-11-17: the old repository is the private
+  `Magnifica101/myLFR-desktop-archive`, and the new repository starts from the
+  single commit `787712f`. Environments, secrets and the variable were
+  recreated, and the pilot-mode run `44048341911` imported and pinned the
+  certificate, bundled the installer and verified its signatures. Both local
+  checkouts point at the new repository and keep the old one as the `archive`
+  remote; never push archive branches to the new repository, because they
+  carry the personal commit email.
+- [x] **Make the repository public.** Done 2026-11-18, with only `main` and
+  Dependabot branches present and no tags or releases.
+- [x] **Immediately enable private vulnerability reporting:** repository
   Settings → Code security → Private vulnerability reporting → Enable. GitHub
   only offers this once the repository is public, and `SECURITY.md` points
   security researchers to it, so until this is done the policy names a channel
   that does not exist. Confirm the link in `SECURITY.md` opens the report form.
-- [ ] **Enable secret scanning push protection** in the same Code security
+  Done 2026-11-18; the link opens the form after GitHub sign-in.
+- [x] **Enable secret scanning push protection** in the same Code security
   settings, so a key committed by mistake is blocked before it is published.
-- [ ] **Check bug reporting end to end.** Issues are enabled, blank issues are
+  Done 2026-11-18, with secret scanning; the first scan found no secrets.
+- [x] **Check bug reporting end to end.** Issues are enabled, blank issues are
   disabled, and Settings → Bug report → Report on GitHub in the app opens the
-  bug report form with the version filled in.
-- [ ] **Turn off unused GitHub features** (Wiki, Projects, Discussions) so
-  nothing suggests a channel that is not monitored.
+  bug report form with the version filled in. Done 2026-11-18 from the
+  Windows dev app: the form opened with the versions filled in.
+- [x] **Protect `main`.** Done 2026-11-18, once the repository was public
+  (private repositories on this plan cannot have it): changes must come
+  through a pull request, including from admins, the `frontend` and
+  `rust-core` checks must pass, and force pushes and deletion are blocked. No
+  approving review is required, because the sole maintainer cannot approve
+  their own pull request.
+- [x] **Turn off unused GitHub features** (Wiki, Projects, Discussions) so
+  nothing suggests a channel that is not monitored. Done 2026-11-17 when the
+  new repository was created.
 
 ## Remaining acceptance work
 

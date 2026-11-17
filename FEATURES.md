@@ -18,9 +18,9 @@ not guarantee a delivery date.
 - Priority: Not set
 - Tracking: None
 
-Decided: the installer is hosted on GitHub Releases. What remains is finishing
-the GitHub Releases publishing steps below, which can only be done once the
-repository is public.
+Decided: the installer is hosted on GitHub Releases. What remains is the first
+published release and a live update from it, now that the repository is
+public (2026-11-18).
 
 Decision recorded 2026-08-27, revised 2026-10-10: GitHub Releases hosts
 everything. Each public release carries the installer, its updater signature,
@@ -43,31 +43,9 @@ the repository to be public. The fresh public history keeps the name
 
 Done: the app's updater endpoint (2026-10-10). Copies installed before then,
 including the 0.8.0 pilot, still ask `desktop.mylfr.co.nz` and need
-reinstalling once. Remaining, at release time: change
-`scripts/prepare-release.mjs` so `latest.json` points at the GitHub release
-asset instead of `desktop.mylfr.co.nz/downloads`, and replace the release
-workflow's Netlify publication job with one that creates the GitHub release.
-Both only work once the repository is public.
-
-### Security vulnerability reporting policy (SECURITY.md)
-
-- Status: In progress
-- Priority: High
-- Tracking: None
-
-Publishing this repository makes the updater's signature verification and the
-backup validation path readable by anyone.
-Security researchers who find a flaw there need a private channel to report it,
-because disclosing such a defect in a public issue would expose every installed
-copy before a fix could ship.
-
-`SECURITY.md` now states the supported versions (latest release only), the
-private reporting route (GitHub private vulnerability reporting), and a 14-day
-best-effort acknowledgement target, and the issue template points security
-reports there. What remains is enabling private vulnerability reporting in the
-repository settings, which GitHub only offers once the repository is public.
-That must be done at the moment the repository becomes public, since the policy
-names a channel that does not yet exist.
+reinstalling once. Also done (2026-11-15): `scripts/prepare-release.mjs`
+points `latest.json` at the GitHub release asset, and the release workflow's
+Netlify job is replaced by one that creates a draft GitHub release.
 
 ### Distribute the Windows installer unsigned
 
