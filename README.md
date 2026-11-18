@@ -1,8 +1,8 @@
 # myLFR Desktop
 
-Local-first Windows desktop software for a single Licenced Fish Receiver business per installation.
+Local-first Windows desktop software for a single Licensed Fish Receiver business per installation.
 
-This is a separate product from the myLFR web application. It has no authentication, workspace roles, Supabase runtime dependency, cloud database, analytics, or telemetry. Operational records are stored in SQLite under the signed-in Windows user's private application-data directory.
+It has no accounts, cloud database, analytics, or telemetry. Operational records are stored in SQLite under the signed-in Windows user's private application-data directory.
 
 ## What you need to know before using myLFR Desktop
 
@@ -67,19 +67,18 @@ The React application calls only the typed commands in `src/lib/desktop.ts`. Rus
 - Restore validation against the exact versioned SQLite tables, indexes, foreign keys, and triggers before replacement.
 - Backup import enforces actual decompressed sizes (32 KiB manifest, 512,000,000-byte database), streams database extraction with a 64 KiB buffer and incremental SHA-256, and rejects incorrect lengths or checksums before touching live records.
 - Runtime updates requiring a valid Tauri updater signature from the committed public key. Signed builds also require Authenticode from their build-pinned Windows publisher; unsigned public releases opt out of that check explicitly at build time.
-- Secretless release builds, isolated signing and publication jobs, immutable GitHub Action revisions with controlled updates, and publication as a draft GitHub release carrying the installer, its updater signature, `latest.json`, and `SHA256SUMS.txt`, with GitHub build provenance attestation once the repository is public.
+- Secretless release builds, isolated signing and publication jobs, immutable GitHub Action revisions with controlled updates, and publication as a draft GitHub release carrying the installer, its updater signature, `latest.json`, and `SHA256SUMS.txt`, with a GitHub build provenance attestation for the installer.
 - External regulatory resources open in the system browser.
+- A security policy in [SECURITY.md](SECURITY.md): only the latest release is supported, and vulnerabilities are reported privately through GitHub private vulnerability reporting, with a 14-day best-effort acknowledgement target. Secret scanning push protection is on, and `main` accepts changes only through pull requests that pass CI.
 - In-app FAQ, bundled for offline use: plain-English answers grouped by when a receiver needs them (Before you start, Every landing, Return day, New fishing year, Keeping records safe, When something goes wrong), with search, "See also" links, and a **Help** button on every page heading that lists that page's questions and opens the chosen answer. Every answer was read against the finished screens on 2026-11-16.
 - Settings → Bug report copies the sanitized problem report and opens the public GitHub bug report form in the system browser, with the app version filled in and a warning not to include business records. There is no support email.
-- Receiver-facing Windows installation, update, uninstall, backup, and pilot-certificate guidance in [docs/installing-windows.md](docs/installing-windows.md).
-
-Planned and proposed product capabilities are tracked in [FEATURES.md](FEATURES.md).
+- Receiver-facing Windows installation, update, uninstall, and backup guidance in [docs/installing-windows.md](docs/installing-windows.md).
 
 ## Licence and contributions
 
 myLFR Desktop is dedicated to the public domain under [CC0 1.0 Universal](LICENSE). The author has waived all copyright and related rights in it to the extent the law allows, and nobody owns it. Anyone may use, copy, modify, or redistribute it for any purpose without asking or giving credit. As the licence states, it is provided as is, with no warranty. A receiver remains responsible for the accuracy and filing of their own returns.
 
-Bug reports are welcome on the [issue tracker](https://github.com/Magnifica101/myLFR-desktop/issues/new/choose). Outside code changes are not accepted: pull requests are closed without review, because a subtle defect in weight arithmetic or landing revisions has regulatory consequences for the receiver using it. You are free to fork. Security vulnerabilities must be reported privately as described in [SECURITY.md](SECURITY.md), never in a public issue. See [CONTRIBUTING.md](CONTRIBUTING.md).
+Bug reports are welcome on the [issue tracker](https://github.com/Magnifica101/myLFR-desktop/issues/new/choose). Outside code changes are not accepted: pull requests are closed without review, because a subtle defect in weight arithmetic or landing revisions may have consequences for the receiver using it. You are free to fork. Security vulnerabilities must be reported privately as described in [SECURITY.md](SECURITY.md), never in a public issue. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development
 
@@ -101,8 +100,6 @@ pilot application's database. Release builds continue to use `nz.co.mylfr.deskto
 
 The `--no-default-features` Rust test target exercises the database and backup/restore without requiring a graphical Linux Tauri runtime. Windows installers are built in Windows CI.
 
-What each kind of check proves, what it cannot, and which a change needs before it counts as verified are in [docs/testing.md](docs/testing.md).
-
 ## Local data and recovery
 
 - Live data: `%LOCALAPPDATA%\nz.co.mylfr.desktop\mylfr.sqlite3` through Tauri's application-data resolver.
@@ -121,7 +118,7 @@ The migration ledger, compatibility rules, and required test matrix are in
 
 ## Fishstock catalogue
 
-The application ships with a frozen list of 12,256 official fishstocks in [`src-tauri/resources/fishstock-catalogue.json`](src-tauri/resources/fishstock-catalogue.json), exported once from the reference table of the earlier myLFR web application. It seeds a new database and is never applied to an existing one: application updates do not change the list. `npm run catalogue:validate` checks the file's structure and checksum.
+The application ships with a frozen list of 12,256 official fishstocks in [`src-tauri/resources/fishstock-catalogue.json`](src-tauri/resources/fishstock-catalogue.json), taken from an earlier version of myLFR on 26 August 2026. It seeds a new database and is never applied to an existing one: application updates do not change the list. `npm run catalogue:validate` checks the file's structure and checksum.
 
 New fishstocks appear over time, and receivers add them themselves on the Species page, choosing how each is measured and which fishing year it belongs to. Official stocks are read-only. A receiver can edit or remove only stocks they added; a stock's code and reporting unit lock once a landing uses it, and nothing a landing uses is ever deleted.
 
@@ -131,8 +128,7 @@ Fishstocks do not all share one fishing year. Which catalogue stocks fall in the
 
 ## Windows releases
 
-Receiver-facing installation, update, uninstall, backup, and pilot certificate
-guidance is in [docs/installing-windows.md](docs/installing-windows.md).
+Receiver-facing installation, update, uninstall, and backup guidance is in [docs/installing-windows.md](docs/installing-windows.md).
 
 The `Release Windows` workflow builds an x64 current-user NSIS installer for Windows 10 22H2 and Windows 11. Public releases are unsigned: Windows shows them as from an unknown publisher, and receivers check the download against the release page instead (see [docs/installing-windows.md](docs/installing-windows.md)). Its default dispatch creates an unpublished pilot artifact signed by the stable self-signed `myLFR Desktop Pilot Testing` certificate. The artifact includes only the public certificate, fingerprint-pinned trust/removal scripts, and tester instructions; its private key never leaves protected local storage and GitHub Actions secrets.
 
@@ -142,7 +138,7 @@ The workflow has three signing modes:
 - `unsigned` for public releases;
 - `production` for a publicly trusted certificate, if one is ever adopted.
 
-Every run uploads its packages as a private GitHub Actions artifact. With `publish` enabled, an `unsigned` or `production` run also creates a **draft** GitHub release tagged `v<version>` with the installer, its `.sig`, `latest.json` and `SHA256SUMS.txt`. A draft is invisible to receivers and to the updater until the maintainer reviews and publishes it. The workflow rejects any attempt to publish a pilot-signed build. Once the repository is public, the signing job also records a GitHub build provenance attestation for the installer, which anyone can check with `gh attestation verify <installer> --repo Magnifica101/myLFR-desktop`.
+Every run uploads its packages as a private GitHub Actions artifact. With `publish` enabled, an `unsigned` or `production` run also creates a **draft** GitHub release tagged `v<version>` with the installer, its `.sig`, `latest.json` and `SHA256SUMS.txt`. A draft is invisible to receivers and to the updater until the maintainer reviews and publishes it. The workflow rejects any attempt to publish a pilot-signed build. The signing job also records a GitHub build provenance attestation for the installer, which anyone can check with `gh attestation verify <installer> --repo Magnifica101/myLFR-desktop`.
 
 The protected `signing` environment holds only signing secrets:
 
@@ -166,64 +162,14 @@ The pilot certificate is not publicly trusted and must never be presented as pro
 
 The updater public key is committed in `tauri.conf.json`; its encrypted private key remains outside the repository and is supplied only to the isolated bundle step through GitHub Actions secrets. The resulting Tauri signature is checked by the updater before anything is installed. A signed build also requires a valid Authenticode signature from the publisher thumbprint compiled into it. An unsigned release build is compiled with `MYLFR_UNSIGNED_WINDOWS_RELEASE=1` and relies on the Tauri signature alone; a build with neither setting, such as a development build, refuses to install updates.
 
-## Packaged Windows smoke test
-
-`scripts/windows-pilot-smoke.mjs` drives an installed build through WebView2's local Chrome DevTools Protocol endpoint. It verifies first-run setup, catalogue search, fishers/vessels, exact landing weights, revisions, backup creation and validation, a real restore round-trip, full export, sanitized diagnostics, update-check throttling, reports, and their visible screens.
-
-Run it only against a fresh synthetic pilot installation. It refuses to continue unless the business client number is `PILOT-001`, but it intentionally creates and restores test data. From PowerShell, launch the installed pilot with a local debugging port, select an existing disposable backup folder, and run:
-
-```powershell
-$env:WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS = '--remote-debugging-port=9223'
-Start-Process "$env:LOCALAPPDATA\myLFR Desktop\mylfr-desktop.exe"
-$env:MYLFR_SMOKE_BACKUP_DIRECTORY = "$env:TEMP\myLFR-pilot\backups"
-New-Item -ItemType Directory -Force $env:MYLFR_SMOKE_BACKUP_DIRECTORY | Out-Null
-npm.cmd run smoke:windows:pilot
-```
-
-**It needs an unlocked Windows session, but not a person.** The script answers each native file dialog itself (`scripts/windows-dialog-helper.ps1`). It writes the path into the dialog's own file or folder box and clicks the dialog's own OK button, using Windows messages rather than keystrokes or the clipboard, and it answers the "replace it?" question with Yes. Nothing depends on which window has focus, so the computer can be used normally while it runs. Do not close the myLFR window, and do not lock the screen: the script checks for the lock screen (`Get-Process LogonUI`) and stops with a clear message if the session is locked.
-
-It can be run from an agent session in WSL. A PowerShell started through Windows interop runs in the interactive desktop session, so `powershell.exe` from WSL can launch the installed app and run the script. Verified on 2026-10-10.
-
-Set `MYLFR_CDP_PORT` if a port other than 9223 is used. For an offline-renderer check, add `--proxy-server=127.0.0.1:9` to the WebView2 arguments.
-
-The script prints nothing while it works and a JSON summary when it finishes, so a quiet window is normal. Three things have each cost a run:
-
-- **Press Enter after pasting the block.** PowerShell runs every pasted line except the last, which waits at the prompt.
-- **If PowerShell says running scripts is disabled** (the 32-bit "Windows PowerShell (x86)" does this to `npm.ps1`), run `npm.cmd run smoke:windows:pilot` instead. No system setting needs changing.
-- **If a dialog is ever completed by hand, choose the smoke backup folder**, not another one: the app writes a backup into whichever folder is chosen.
-
-### Capturing what the screens actually look like
-
-Development on Linux or WSL renders through WebKitGTK, but the product ships on Windows and renders through WebView2, which is Chromium. The two are different engines, so a layout approved in a development window is not evidence of what a receiver sees. The launch command for the development app also sets `WEBKIT_DISABLE_COMPOSITING_MODE=1`, which suppresses the `backdrop-filter` blur behind modals — a visible difference that only appears in the packaged build.
-
-The smoke test can capture each screen it verifies, in the real engine against real pilot data. Set `MYLFR_SMOKE_SCREENSHOT_DIR` to an existing directory before running:
-
-```powershell
-$env:MYLFR_SMOKE_SCREENSHOT_DIR = "$env:TEMP\myLFR-pilot\screens"
-New-Item -ItemType Directory -Force $env:MYLFR_SMOKE_SCREENSHOT_DIR | Out-Null
-npm run smoke:windows:pilot
-```
-
-Seven numbered PNGs are written — Home, the backup information modal, permit holders, landings, monthly summaries, export data, and settings — and the file list is added to the JSON the script prints. Leave the variable unset and the script behaves exactly as before.
-
-Each image is captured only after the assertion for that screen has passed, so a picture always corresponds to a verified state. Screens are captured at a fixed 1440x900 viewport so two runs are comparable; that is above the 1000px breakpoint where the sidebar collapses to icons, so captures show the full navigation. Images come back 1425 wide because the scrollbar is excluded. Full screens are captured beyond the viewport so a long page is reviewable in one image, but the modal is captured at viewport size only: `captureBeyondViewport` paints a fixed overlay once at the top and leaves the rest of the page beneath it unblurred, which would misrepresent what the user sees.
-
-The smoke test is designed to be repeatable in a synthetic database that may contain other manual test records. Report assertions must remain scoped to the smoke permit holder and vessel, and UI report checks must select that permit holder. Do not assert that an entire month contains only the smoke landing.
-
-### Post-install database checks
-
-Close the application before taking a safety snapshot. Verify SQLite logically with `PRAGMA integrity_check`, the myLFR `application_id`, the supported `user_version`, and expected synthetic smoke-test records. Do not compare `mylfr.sqlite3-shm` byte-for-byte: it is transient coordination state and can change merely by opening a database copy, including through a read-only connection. Use an app-created `.mylfr-backup` or SQLite's backup API for recovery rather than assembling a backup from SQLite sidecar files.
-
-Release, installation, restore, and packaged-smoke tasks permit at most three controlled attempts. After a failure, record evidence and update `HANDOFF.md` with the cause and corrected procedure before retrying. Critical signer, publication, secret, database-integrity, or rollback-safety failures still require an immediate stop.
-
 ## Verification
 
 Pull requests run:
 
-- npm dependency audit, repository security policy, and fishstock catalogue validation;
+- npm dependency audit (any exception is named, with its reason, in `scripts/audit-npm.mjs`), repository security policy, and fishstock catalogue validation;
 - TypeScript production build;
 - Vitest bridge, setup, exact-weight, PDF, XLSX, fishstock, update, and notice tests;
 - Rust migration, constraint, landing transaction/revision, fishstock, update, checksum, and backup/restore tests;
 - Rust migration compatibility tests covering every supported schema, older-schema backup restore, future-schema rejection, and failed-migration version safety.
 
-A production candidate must additionally be installed and smoke-tested on a current Windows 11 x64 machine, including offline use, print/PDF, update, backup, and replacement-PC restore. Windows 10 testing was waived on 2026-08-28 because no Windows 10 machine is available. See [docs/testing.md](docs/testing.md).
+A production candidate must additionally be installed and smoke-tested on a current Windows 11 x64 machine, including offline use, print/PDF, update, backup, and replacement-PC restore. Windows 10 testing was waived on 2026-08-28 because no Windows 10 machine is available.

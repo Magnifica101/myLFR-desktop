@@ -107,7 +107,7 @@ export default function Dashboard() {
         {metrics.data?.unitTotals.map((total) => <div className="metric" key={total.reportingUnit}><strong>{formatDashboardQuantity(total.quantity, total.reportingUnit)}</strong><span>{total.reportingUnit === 'count' ? 'OYU count' : total.reportingUnit === 'meatweightKg' ? 'Meatweight' : 'Greenweight'}</span></div>)}
       </div>
       <div className="form-grid">
-        <Card><h2>Monthly return reminder</h2><p className="muted">Your Licenced Fish Receiver Return is due with FishServe in:</p><p style={{ fontSize: 42, margin: '12px 0', fontWeight: 800 }}>{daysUntil15th()} days</p></Card>
+        <Card><h2>Monthly return reminder</h2><p className="muted">Your Licensed Fish Receiver Return is due with FishServe in:</p><p style={{ fontSize: 42, margin: '12px 0', fontWeight: 800 }}>{daysUntil15th()} days</p></Card>
         <Card className="data-recovery-card">
           <div className="backup-heading">
             <h2>Data recovery</h2>

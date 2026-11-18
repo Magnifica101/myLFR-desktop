@@ -1,16 +1,15 @@
 # Installing myLFR Desktop on Windows
 
-myLFR Desktop is a Windows application for one Licenced Fish Receiver business
+myLFR Desktop is a Windows application for one Licensed Fish Receiver business
 per installation. The application's operational records are stored locally on
-the Windows computer. They are not uploaded to myLFR, Supabase, or another
-online database.
+the Windows computer and are never uploaded anywhere.
 
 ## Before installing
 
 - Use a supported 64-bit Windows computer: Windows 10 version 22H2 or Windows
   11.
-- Download the installer only from the official myLFR website or the official
-  myLFR GitHub release linked from that website.
+- Download the installer only from the myLFR
+  [GitHub Releases page](https://github.com/Magnifica101/myLFR-desktop/releases).
 - Keep the downloaded installer until the installation has completed and the
   application has been opened successfully.
 - If this computer already contains myLFR records, create and check a
@@ -24,15 +23,18 @@ browser page or `http://localhost:1420` as the desktop application.
 ## Installation
 
 myLFR Desktop is free and is not signed with a commercial code-signing
-certificate, so Windows does not know who published it. Pilot builds have
-different instructions below.
+certificate, so Windows does not know who published it.
 
 1. Download the installer (the file ending in `-setup.exe`) only from the
    [GitHub Releases page](https://github.com/Magnifica101/myLFR-desktop/releases).
    Do not run an installer received by email or from another website.
 2. Optional, for extra assurance: compare the installer's SHA-256 checksum with
-   the one in `SHA256SUMS.txt` on the same release. In PowerShell, run
-   `Get-FileHash .\<installer-name>` and check the two values match exactly.
+   the one in `SHA256SUMS.txt` on the same release. In PowerShell, in the
+   folder holding the installer, run
+   `(Get-FileHash .\<installer-name>).Hash -eq '<checksum>'`, replacing
+   `<installer-name>` with the installer's file name and `<checksum>` with the
+   value from `SHA256SUMS.txt`. It prints `True` when they match. Capital and
+   small letters do not matter.
 3. Double-click the installer. Windows SmartScreen shows **Windows protected
    your PC** with **Publisher: Unknown publisher**. This is expected for
    myLFR. Choose **More info**, check the app name is the installer you
@@ -70,8 +72,8 @@ two ways, chosen in **Settings → Application updates**:
   available, the same blue button appears; select it to review and install
   the update.
 
-Either way, nothing is installed until you choose **Review and install**,
-which shows what's new in the version. Leave **Back up my records before
+Either way, nothing is installed until you choose **Install** in the update
+window, which shows what's new in the version. Leave **Back up my records before
 installing** ticked: the new version updates your records the first time it
 opens, and an older version cannot read them afterwards. The application
 checks the update's digital signature against myLFR's own key before installing
@@ -102,38 +104,6 @@ The live database is normally under:
 
 Do not delete this data folder as a cleanup step unless the records have been
 backed up and the deletion is intentional. An uninstallation is not a backup.
-
-## Pilot and self-signed builds
-
-Pilot builds are for invited testing only. They are not production releases
-and their certificate is not trusted by Windows by default.
-
-1. Keep the pilot README, certificate, trust scripts, and installer together.
-2. Open PowerShell in that folder.
-3. Run the trust script, replacing `<installer-name>` with the actual installer
-   filename:
-
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\install-pilot-certificate.ps1 -InstallerPath ".\<installer-name>"
-   ```
-
-4. Confirm that the script displays this fingerprint before accepting the
-   certificate trust prompt:
-
-   ```text
-   4A64D92E4FE40341E60A19720CBFFD1E5DA7ADB4
-   ```
-
-5. Run the installer, complete the test, and report any problem with the
-   version and steps that produced it.
-6. Remove the temporary certificate trust when testing is complete:
-
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\remove-pilot-certificate.ps1
-   ```
-
-Removing the pilot certificate does not uninstall myLFR Desktop or delete its
-local database. The certificate contains no private signing key.
 
 ## Getting help
 

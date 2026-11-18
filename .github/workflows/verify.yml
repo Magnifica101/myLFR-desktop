@@ -21,7 +21,7 @@ jobs:
           cache: npm
       - run: npm ci --ignore-scripts
       - name: Audit all npm dependencies
-        run: npm audit --include=dev
+        run: npm run security:audit
       - run: npm run security:policy
       - run: npm run catalogue:validate
       - run: npm test

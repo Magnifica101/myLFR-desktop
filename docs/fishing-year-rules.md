@@ -1,7 +1,7 @@
 # Fishing year rules
 
 New Zealand fishstocks do not share one fishing year. myLFR supports the three
-that apply to Licenced Fish Receivers, and classifies every fishstock code into
+that apply to Licensed Fish Receivers, and classifies every fishstock code into
 exactly one of them.
 
 This matters because the Home page reports totals "for this fishing year". A
