@@ -35,5 +35,5 @@ The removal script does not uninstall myLFR Desktop or delete its local database
 The certificate contains no private key; the signing key is never included in the
 pilot download.
 
-For the complete production and pilot installation procedure, see
+For installing, updating, and backing up production releases, see
 `docs/installing-windows.md` in the source repository.

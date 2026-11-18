@@ -2,10 +2,10 @@
 
 myLFR Desktop is a single-business, single-Windows-user local application.
 
-- No Supabase, authentication, cloud sync, Google Analytics, address autocomplete, or telemetry is present at runtime. The only network traffic the application starts by itself is the update check, and only if the user turns on automatic checks; a restored backup always resets that setting to manual.
+- There are no accounts, cloud sync, analytics, or telemetry. The only network traffic the application starts by itself is the update check, and only if the user turns on automatic checks; a restored backup always resets that setting to manual.
 - The Tauri webview has a restrictive CSP and no direct filesystem, network, or SQL authority.
 - Rust validates all inputs and performs database writes transactionally.
-- Application updates require both an Authenticode-signed installer and a valid Tauri updater signature.
+- Application updates install only with a valid updater signature from the project's signing key. Releases are not Authenticode-signed; each release publishes SHA-256 checksums (`SHA256SUMS.txt`) and a GitHub build provenance attestation, so a downloaded installer can be checked with `gh attestation verify <installer> --repo Magnifica101/myLFR-desktop`.
 - The fishstock catalogue is bundled with the application and never updated separately. Restoring a backup re-establishes the official stocks from it and validates every stock the receiver added.
 - Support diagnostics exclude the database path, backup path, business identity, permit holders, vessels, landings, and weights.
 

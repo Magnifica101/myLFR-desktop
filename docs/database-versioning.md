@@ -5,7 +5,7 @@ interchangeable:
 
 | Version | Meaning | Where it is recorded |
 | --- | --- | --- |
-| Application version | The installed program, such as `0.6.0` | Tauri/package metadata and backup manifest |
+| Application version | The installed program, such as `0.8.0` | Tauri/package metadata and backup manifest |
 | Database schema version | The structure and data rules used by SQLite | SQLite `PRAGMA user_version` |
 | Backup format version | The shape of the `.mylfr-backup` ZIP package | Backup manifest |
 | Catalogue version | The bundled fishstock catalogue data | `app_settings.catalogue_version` |
@@ -18,7 +18,7 @@ The backup package format is version `1` in `src-tauri/src/backup.rs`.
 ## Rules for changing the schema
 
 1. Add one new, numbered SQL file for each schema change, such as
-   `0005_add_example.sql`.
+   `0011_add_example.sql`.
 2. Append the migration to `SCHEMA_MIGRATIONS` and increase
    `CURRENT_SCHEMA_VERSION` to the same number.
 3. Set `PRAGMA user_version` to that migration's exact number after its
@@ -76,8 +76,7 @@ The matrix tests are in `src-tauri/src/tests.rs`. When a new schema version is
 added, extend the migration ledger and its representative test data as needed;
 the ranges in the existing matrix tests will then include the new version.
 
-Before a release, record the four version values in the release notes or
-handoff. When investigating an old backup, inspect its `manifest.json` for
+Before a release, record the four version values in the release notes. When investigating an old backup, inspect its `manifest.json` for
 `applicationVersion`, `schemaVersion`, `formatVersion`, and
 `catalogueVersion`. Do not infer compatibility from the filename or from the
 application version alone.

@@ -17,6 +17,7 @@
     "desktop:dev": "tauri dev --config src-tauri/tauri.dev.conf.json",
     "desktop:build": "tauri build",
     "smoke:windows:pilot": "node scripts/windows-pilot-smoke.mjs",
+    "security:audit": "node scripts/audit-npm.mjs",
     "security:policy": "node scripts/check-security-policy.mjs",
     "catalogue:validate": "node scripts/validate-catalogue.mjs",
     "release:prepare": "node scripts/prepare-release.mjs"

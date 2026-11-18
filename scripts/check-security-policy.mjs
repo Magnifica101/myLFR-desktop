@@ -11,6 +11,11 @@ const read = (path) => readFile(resolve(root, path), 'utf8');
 const dependabot = await read('.github/dependabot.yml');
 expect(dependabot.includes('package-ecosystem: github-actions'), 'Dependabot must keep GitHub Action SHA updates controlled');
 
+const verifyWorkflow = await read('.github/workflows/verify.yml');
+expect(verifyWorkflow.includes('run: npm run security:audit'), 'Verify must audit every npm dependency with scripts/audit-npm.mjs');
+const npmAudit = await read('scripts/audit-npm.mjs');
+expect(npmAudit.includes("'audit', '--include=dev'"), 'The npm audit must include development dependencies');
+
 const workflowDirectory = resolve(root, '.github/workflows');
 for (const name of await readdir(workflowDirectory)) {
   if (!name.endsWith('.yml') && !name.endsWith('.yaml')) continue;

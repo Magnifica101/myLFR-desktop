@@ -2,11 +2,10 @@
 
 Bug reports are welcome. Outside code changes are not accepted.
 
-myLFR Desktop prepares the figures a Licenced Fish Receiver files with
+myLFR Desktop prepares the figures a Licensed Fish Receiver may supply to
 Fisheries New Zealand, so a subtle defect in weight arithmetic or landing
-revisions has regulatory consequences for the receiver using it. Every change is
-therefore made by the maintainer, and pull requests from outside the project
-are closed without review. Please do not spend time on one.
+revisions may have consequences for the receiver using it. Pull requests from
+outside the project are closed without review. Please do not spend time on one.
 
 - **Bugs:** [open an issue](https://github.com/Magnifica101/myLFR-desktop/issues/new/choose).
   Issues are public: never include business names, permit holders, vessels,
