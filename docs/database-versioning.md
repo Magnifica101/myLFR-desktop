@@ -36,6 +36,11 @@ The backup package format is version `1` in `src-tauri/src/backup.rs`.
 6. Do not change the schema number for a normal application-code change. Do
    change it for a persisted table, index, trigger, constraint, column, or
    data-rule change that needs a migration.
+7. Migration files are kept with LF line endings on every checkout
+   (`.gitattributes`). SQLite stores each table's SQL exactly as written, and
+   builds from a Windows checkout used to embed CRLF endings, so existing
+   databases can hold either. Restore therefore ignores CRLF versus LF when it
+   compares a backup's schema; every other character is compared exactly.
 
 The bundled catalogue has its own version. It is frozen and only seeds new
 databases, so a catalogue change is never a database schema migration.

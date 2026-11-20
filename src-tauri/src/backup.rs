@@ -538,9 +538,25 @@ fn schema_objects(connection: &Connection) -> AppResult<Vec<SchemaObject>> {
     )?;
     Ok(statement
         .query_map([], |row| {
-            Ok((row.get(0)?, row.get(1)?, row.get(2)?, row.get(3)?))
+            let sql: Option<String> = row.get(3)?;
+            Ok((
+                row.get(0)?,
+                row.get(1)?,
+                row.get(2)?,
+                sql.map(|sql| normalize_line_endings(&sql)),
+            ))
         })?
         .collect::<Result<Vec<_>, _>>()?)
+}
+
+/// SQLite stores each object's SQL exactly as the migration that created it
+/// was written. A build from a Windows checkout can embed the migrations with
+/// CRLF line endings, so the same schema can be stored with either ending
+/// depending on which build created each table. Line endings carry no meaning
+/// in the schema, so they are not allowed to make a genuine backup
+/// unrestorable; every other character is still compared exactly.
+fn normalize_line_endings(sql: &str) -> String {
+    sql.replace("\r\n", "\n")
 }
 
 fn prune_backups(directory: &Path) -> AppResult<()> {
