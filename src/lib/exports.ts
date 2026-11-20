@@ -1,4 +1,7 @@
 import type { Column, Content, TableCell, TDocumentDefinitions } from 'pdfmake/interfaces';
+import type * as PdfMakeApiModule from 'pdfmake/build/pdfmake';
+
+type PdfMakeApi = typeof PdfMakeApiModule;
 import { addressLines } from './address';
 import { desktop } from './desktop';
 import { formatDate, formatDateTime, formatQuantityValue, reportingUnitLabel, reportingUnitShortLabel, toBase64 } from './format';
@@ -345,14 +348,17 @@ export async function saveReportPdf(
   details: ReportDetails,
   defaultName: string,
 ) {
-  const [pdfMake, virtualFonts] = await Promise.all([
+  const [pdfMakeModule, virtualFonts] = await Promise.all([
     import('pdfmake/build/pdfmake'),
     import('pdfmake/build/vfs_fonts'),
   ]);
-  const pdfRuntime = pdfMake as unknown as {
-    addVirtualFileSystem: (files: Record<string, string>) => void;
-  };
-  pdfRuntime.addVirtualFileSystem((virtualFonts.default ?? virtualFonts) as unknown as Record<string, string>);
+  // pdfmake keeps its settings on its own instance, so configure and use that
+  // instance rather than the module wrapper it is imported through.
+  const pdfMake: PdfMakeApi = (pdfMakeModule as { default?: PdfMakeApi }).default ?? pdfMakeModule;
+  pdfMake.addVirtualFileSystem((virtualFonts.default ?? virtualFonts) as unknown as Record<string, string>);
+  // Reports use only the bundled fonts and the logo stored in the database, so
+  // pdfmake must never download anything. The app's CSP blocks it as well.
+  pdfMake.setUrlAccessPolicy(() => false);
 
   const metadata: Content[] = (details.groupByFishType
     ? monthlySummaryPdfMetadata(profile, details)
@@ -426,7 +432,7 @@ export async function saveReportPdf(
     },
   };
 
-  const buffer = await new Promise<Buffer>((resolve) => pdfMake.createPdf(document).getBuffer(resolve));
+  const buffer = await pdfMake.createPdf(document).getBuffer();
   const bytes = new Uint8Array(buffer);
   return desktop.saveExportFile(`${defaultName}.pdf`, 'pdf', toBase64(bytes));
 }

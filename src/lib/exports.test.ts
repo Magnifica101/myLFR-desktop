@@ -326,6 +326,17 @@ describe('report exports', () => {
     expect(written!.bytes.length).toBeGreaterThan(1_000);
   });
 
+  it('never lets pdfmake download anything while making a PDF', async () => {
+    await saveReportPdf(report, profile, details, 'summary');
+
+    const pdfMakeModule = await import('pdfmake/build/pdfmake');
+    const pdfMake = ((pdfMakeModule as { default?: unknown }).default ?? pdfMakeModule) as {
+      urlAccessPolicy?: (url: string) => boolean;
+    };
+    expect(pdfMake.urlAccessPolicy?.('https://example.com/logo.png')).toBe(false);
+    expect(pdfMake.urlAccessPolicy?.('http://127.0.0.1/font.ttf')).toBe(false);
+  });
+
   it('embeds the business logo in the PDF header when one is stored', async () => {
     await saveReportPdf(report, profile, details, 'summary');
     const withoutLogo = written!.bytes.length;
