@@ -1,6 +1,6 @@
 [package]
 name = "mylfr-desktop"
-version = "0.8.0"
+version = "1.0.0"
 description = "Local-first desktop application for Licensed Fish Receivers"
 authors = ["myLFR"]
 license = "CC0-1.0"
