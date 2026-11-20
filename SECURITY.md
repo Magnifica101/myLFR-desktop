@@ -6,7 +6,7 @@ myLFR Desktop is a single-business, single-Windows-user local application.
 - The Tauri webview has a restrictive CSP and no direct filesystem, network, or SQL authority.
 - Rust validates all inputs and performs database writes transactionally.
 - Application updates install only with a valid updater signature from the project's signing key. Releases are not Authenticode-signed; each release publishes SHA-256 checksums (`SHA256SUMS.txt`) and a GitHub build provenance attestation, so a downloaded installer can be checked with `gh attestation verify <installer> --repo Magnifica101/myLFR-desktop`.
-- The fishstock catalogue is bundled with the application and never updated separately. Restoring a backup re-establishes the official stocks from it and validates every stock the receiver added.
+- The fishstock catalogue is bundled with the application and never updated separately. Restoring a backup re-establishes the built-in stocks from it and validates every stock the receiver added.
 - Support diagnostics exclude the database path, backup path, business identity, permit holders, vessels, landings, and weights.
 
 Users must secure their Windows account, enable BitLocker/device encryption, and select an access-controlled backup destination. Unencrypted backup packages should be handled as commercially sensitive records.

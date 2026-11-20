@@ -1,12 +1,10 @@
 # myLFR Desktop
 
-Local-first Windows desktop software for a single Licensed Fish Receiver business per installation.
+myLFR Desktop is free Windows software for Licensed Fish Receivers (LFRs). It gives you an easy way to record the fish you receive from each permit holder and vessel, and turns those records into the monthly figures you need for your Licensed Fish Receiver Return (LFRR). myLFR prepares the figures; you still check them and file your return with FishServe yourself.
 
-It has no accounts, cloud database, analytics, or telemetry. Operational records are stored in SQLite under the signed-in Windows user's private application-data directory.
+Your records stay on your own computer. There is no account to set up, and your records are never sent over the internet. Each installation is for one LFR business.
 
 ## What you need to know before using myLFR Desktop
-
-The application shows this notice before first use. Keep this copy in step with `src/components/ResponsibilitiesNotice.tsx`.
 
 **myLFR Desktop is free, open-source software released under Creative Commons Zero (CC0 1.0).** It has been placed in the public domain: nobody owns it, and anyone may use, copy, change or share it.
 
@@ -15,6 +13,42 @@ The application shows this notice before first use. Keep this copy in step with 
 3. **It is not an official product.** myLFR is not made by, connected with, or endorsed by Fisheries New Zealand, the Ministry for Primary Industries, or FishServe.
 4. **Your records stay on this computer.** myLFR never sends your records anywhere. Keeping backups is up to you: choose a backup folder in Settings, ideally on a USB drive, OneDrive or other cloud storage.
 5. **Support is not guaranteed.** You can report problems on GitHub, and the maintainer will look at them when they can.
+
+## What myLFR does
+
+**Recording landings**
+
+- Enter each landing: the permit holder, the vessel, the invoice number, and which fish and how much.
+- Weights are saved exactly as you type them, to two decimal places.
+- If you change or delete a landing, myLFR keeps a copy of how it was before.
+- Find any landing by date, permit holder, vessel, fish or invoice number.
+- Keep a list of your permit holders and their vessels. A vessel used by more than one permit holder only needs entering once.
+- All 12,256 fishstock codes are built in. Mark the ones you use most as favourites, and add new codes yourself.
+- Greenweight, scallop meatweight and counted fish are always added up separately, never mixed.
+
+**Returns and reports**
+
+- The Home page shows your totals for the fishing year and how many days are left until your return is due on the 15th.
+- Print or save a monthly summary for each permit holder, as a PDF or Excel file, with your business logo.
+- Save your landings to Excel, with charts showing what came in and who it came from.
+- Take a full copy of all your records out of myLFR at any time.
+
+**Keeping your records safe**
+
+- Your records stay on your computer. Nothing is sent anywhere, and there is no account to set up.
+- myLFR backs up your records each day you make changes, to a folder you choose, such as a USB stick or OneDrive.
+- If your computer breaks, install myLFR on a new one and restore your latest backup.
+- Before restoring, myLFR checks the backup is complete and undamaged. If anything goes wrong, your records are put back as they were.
+
+**Updates**
+
+- myLFR only updates when you say so. It reminds you once a month to check, or it can check every day if you prefer.
+- Before every update, it checks the update really came from myLFR and backs up your records.
+
+**Help**
+
+- Plain-English answers to common questions, even without internet, and a **Help** button on every page.
+- Something not working? **Settings → Bug report** helps you report it, without sharing any business details.
 
 ## Stack
 
@@ -25,54 +59,6 @@ The application shows this notice before first use. Keep this copy in step with 
 - ExcelJS and PDFMake are click-loaded for offline XLSX and PDF exports.
 
 The React application calls only the typed commands in `src/lib/desktop.ts`. Rust performs validation and owns every database transaction. There is intentionally no generic SQL command.
-
-## Implemented workflows
-
-- First-run local business setup with manual structured address entry, in plain language: `LFR name` and `Fishserve Client Number` with short explanations, Street type examples, and a "Keep your records safe" section recommending a backup folder off the computer (USB, OneDrive, Google Drive, or a network drive) that can be chosen later.
-- Dashboard fishing-year context and metrics with whole-kilogram greenweight, return reminder, last-successful-backup timestamp in Data recovery, and manual backup. With no backup folder set, the Data recovery action is an enabled `Choose backup folder now` that opens the folder picker, becoming `Back up now` once a folder is chosen. Every KPI counts only activity inside the selected fishing year, so permit holders and vessels reflect who actually landed in the period rather than who is on file.
-- Fishing-year switcher on the Home page beside the period heading, saving the same preference the Business settings selector writes.
-- Searchable permit holders that start as compact name-and-number rows and expand to vessels and management actions, with archive/restore and history-safe removal rules.
-- A simpler Add permit holder form: no archived-vessel filter or archive guidance (those appear only when editing), a note that vessels are optional for shore-based permit holders, and registration guidance beside each new vessel's fields.
-- Archived status that stays visible: with archived permit holders or vessels shown, current and archived entries share one case-insensitive A–Z order in the list and editor; archived permit holders carry an **Archived** label even while collapsed (and in the summary's accessible name), archived vessels are labelled with a clear gap before the label, and the permit holder and vessel filters work independently.
-- Adding a vessel in the permit holder editor scrolls to the new vessel, focuses its registration field and highlights it in green with a 4.5-second fade (instant scroll and a steady highlight with reduced motion). A vessel added in the current edit shows **New vessel** with a **Remove** button that takes it off the form at once; saved vessels keep Delete, Archive or Remove link with confirmation.
-- Individual vessel archive/restore in the permit holder editor. Vessels with current or historical landings offer Archive; unused vessels offer Delete. Changes remain pending with Undo until Save, and Cancel discards them. Archived vessels can be shown and restored, stay on historical records, and are excluded from new landing selections. Full Excel exports include each vessel's active or archived status.
-- Confirmation popups before archiving or deleting a permit holder, naming the holder and permit and explaining the consequences, with Cancel focused and Escape cancelling. Vessel archive, delete and shared-link removal confirm in the same way and stay pending with Undo until **Save permit holder**. Notifications name the completed action: archived, restored or deleted.
-- Shared vessels matched only by registration number: one vessel identity can be linked to multiple permit holders, with independent archive/restore for each link. Enter a registration and choose `Use this vessel` when a match exists. New registrations contain digits only, start with 1–9 and allow only outside whitespace. Names remain editable shared details; saved registrations identify the vessel. Landings and reports keep their original permit holder, while vessel searches and dashboard counts use the shared identity. Schema 10 consolidates matching numeric registrations without rewriting immutable snapshots, and flags legacy registration or name differences for review.
-- Collapsible side navigation with a locally persisted expanded/collapsed preference.
-- Landing create/edit/delete, exact two-decimal kilogram or whole-count validation, immutable save versions, and retained read-only delete snapshots.
-- Deleted landings in search. Deleting a landing asks for confirmation and explains that a read-only snapshot is kept. Ticking **Include archived (deleted) landings** in Search landings lists them in a table with the same columns and widths as the results above, the deletion time under the landing date, and a view button that opens the snapshot: date, permit holder and number, vessel and registration, invoice, and every fishstock with its description, quantity and unit.
-- Landing quantities use the catalogue-defined reporting basis: greenweight kilograms, scallop meatweight kilograms, or whole-individual counts for OYU5. Landing pages, summaries, dashboard KPIs, history, and PDF/XLSX exports keep unlike units separate.
-- Fishstock search and favourites using the bundled 12,256-record catalogue, which is frozen: application updates never change it.
-- Receiver-maintained fishstocks on the Species page. A receiver adds stocks missing from the list, choosing the code, name, reporting unit, and fishing year (never pre-selected), after a warning when the new stock looks like an existing one. Added stocks are labelled, count in the fishing year the receiver chose, and are included in backups and the data export. Only receiver-added stocks can be edited or removed: the name and fishing year can always change, the code and reporting unit only until a landing uses the stock, and a stock any landing uses can't be removed.
-- Landing search by fishstock code and by invoice number, alongside the date, permit holder and vessel filters. The fishstock code finds every landing that uses one stock; any part of an invoice number, in any case, finds the landing for an invoice in hand, including deleted landings when those are included.
-- Monthly summaries grouped by three-letter fish type, with XLSX/PDF output.
-- Monthly summaries are for one permit holder at a time, and the PDF and Excel file names include the month, the permit holder's name and their permit number. The Excel workbook keeps its summary sheet and adds a sheet for each vessel with two sections: the vessel's totals by fish type, then a line for every fishstock on each of its landings (date, invoice number, fishstock code and name, fish type, quantity and unit).
-- Export data page that saves landings as one Excel table for pivot tables: a row for each fishstock on each landing, with the date (as a real Excel date), year, month, permit holder and number, vessel and number, invoice number, fishstock code and name, fish type, unit, and quantity as a number. It can be narrowed by dates, permit holder and vessel.
-- Export data analysis of exactly the landings selected for the Excel file. The same date, permit holder, vessel, fishstock and quantity-type filters drive the file and the figures. Summary cards, in one row when the window is wide enough, show permit holders, landings, greenweight, count, fishstocks and vessels (with shore-based landings), plus meatweight when present, with kilograms to the nearest kg. Received over time is one line graph grouped by month, week (from Monday) or day, explorable by hover or arrow keys. Doughnut charts split the selected quantity by fishstock and by fish type (the three-letter group used in monthly summaries, named after its largest stock), and by permit holder and by vessel: the 10 largest as slices and the rest as Other, a legend beside each, and a list below of every entry with its quantity and share (shore-based receipts listed with "No vessel number"). Each chart has Greenweight, Meatweight and Count buttons that never change the filters or the file. The side navigation shows Export data with a file-output icon.
-- Export data file names that identify the permit holder: `myLFR-landing-data-<permit holder>-<from>-to-<to>.xlsx`, or `All-permit-holders` when no permit holder is chosen. Without From and To dates, the name uses the first and last landing dates selected.
-- Optional business logo on PDF reports, chosen in Settings under Your logo and resized to at most 600 pixels on upload so exports, the local database, and backups stay small.
-- Settings page grouped into labelled Your business, Data safety, and About sections, with status-first backup guidance, secondary technical details, and simplified support and export actions.
-- Settings About section, second pass: Application updates sits beside an open Versions card (application, fishstock catalogue and database schema, with the database file under Technical details), and Bug report is a collapsed, full-width card at the bottom of the page.
-- Backup location guidance. The Database backups card points to its information button, which explains choosing a folder off the computer (USB, OneDrive, Google Drive, or a network drive), and letting sync finish. Home and Settings share one set of backup status names. Folder paths are shown without the Windows `\\?\` prefix. A same-drive warning appears when backups share a drive with the records, except for folders inside OneDrive; for other sync folders, such as Dropbox, it can be hidden for that folder and returns if a different folder is chosen.
-- Plain-English Windows installer and uninstaller wording. The welcome, progress and finish screens, the reinstall choices (with a reminder to have a recent backup before upgrading), and the removal screens use everyday language. The removal option says it permanently deletes myLFR business records, and the final screen says the records were kept unless that option was chosen. If myLFR is still open, the installer stops and asks the receiver to close it normally instead of force-closing it.
-- Button names in bold wherever app guidance mentions them: dialogs, help, FAQ answers, warnings and notifications. FAQ answers, status messages and notifications share one bold-text renderer, and native dialogs never show raw Markdown markers.
-- Readable Excel workbook data export (one sheet per table, identifiers resolved to names, greenweight in kilograms) for taking records out of myLFR, alongside a schema-versioned full JSON export for migrating into another system.
-- Sanitized diagnostics export including application versions, backup status, and a persistent capped local error log that records handled faults and Rust panics with filesystem paths and long numbers redacted.
-- Native crash reporting with nothing sent off the device: a session marker left behind by a crash, an out-of-memory stop, a Task Manager kill, or a power loss is logged at the next launch. On Windows the entry adds the crash Windows Error Reporting recorded, the app's last error output, and a crash-handler stack trace of module names and offsets, never memory contents. WebView2 process failures are logged, and a crashed page reloads. Release runs keep debug symbols, not shipped, that `tools/crash-symbols` uses to turn traces into functions and lines; see `docs/crash-reports.md`.
-- Backup/restore and Tauri application updates.
-- A plain-English responsibilities notice, shown before first use and kept in Settings under About. It states that the software is CC0 public domain with no warranty, that the receiver remains responsible for their returns, that it is not an official Fisheries New Zealand, MPI, or FishServe product, that records stay on the computer, and that support is not guaranteed. The "I understand" acknowledgement is stored only on this computer with the notice version; a restore clears it, and a raised version shows the notice again.
-- Discoverable application updates, set in Settings to **Manual** (the default on a new installation) or **Automatic**. Manual shows a blue download button at the bottom of the sidebar on the first Monday after the 15th, never on the 15th itself (return day), unless a check already succeeded in that cycle; it leads to the update action in Settings. Automatic checks at most once a day, and a found update shows the same button, which opens the install review. **Check for updates now** always checks, whenever the receiver asks. Nothing appears across the page. A check that can't reach the update server doesn't count and is reported plainly. Installing is always confirmed, shows the release notes and download progress, and backs up first by default. Restoring a backup resets the setting to Manual.
-- Native Rust-owned file selection for backup, restore, export, and diagnostics, plus opening the configured backup folder in the system file explorer, with single-use restore authorization and no renderer-supplied filesystem paths.
-- Minimal renderer capabilities with unused native image and plugin authority removed.
-- Restore validation against the exact versioned SQLite tables, indexes, foreign keys, and triggers before replacement.
-- Backup import enforces actual decompressed sizes (32 KiB manifest, 512,000,000-byte database), streams database extraction with a 64 KiB buffer and incremental SHA-256, and rejects incorrect lengths or checksums before touching live records.
-- Runtime updates requiring a valid Tauri updater signature from the committed public key. Signed builds also require Authenticode from their build-pinned Windows publisher; unsigned public releases opt out of that check explicitly at build time.
-- Secretless release builds, isolated signing and publication jobs, immutable GitHub Action revisions with controlled updates, and publication as a draft GitHub release carrying the installer, its updater signature, `latest.json`, and `SHA256SUMS.txt`, with a GitHub build provenance attestation for the installer.
-- External regulatory resources open in the system browser.
-- A security policy in [SECURITY.md](SECURITY.md): only the latest release is supported, and vulnerabilities are reported privately through GitHub private vulnerability reporting, with a 14-day best-effort acknowledgement target. Secret scanning push protection is on, and `main` accepts changes only through pull requests that pass CI.
-- In-app FAQ, bundled for offline use: plain-English answers grouped by when a receiver needs them (Before you start, Every landing, Return day, New fishing year, Keeping records safe, When something goes wrong), with search, "See also" links, and a **Help** button on every page heading that lists that page's questions and opens the chosen answer. Every answer was read against the finished screens on 2026-11-16.
-- Settings → Bug report copies the sanitized problem report and opens the public GitHub bug report form in the system browser, with the app version filled in and a warning not to include business records. There is no support email.
-- Receiver-facing Windows installation, update, uninstall, and backup guidance in [docs/installing-windows.md](docs/installing-windows.md).
 
 ## Licence and contributions
 
@@ -118,11 +104,11 @@ The migration ledger, compatibility rules, and required test matrix are in
 
 ## Fishstock catalogue
 
-The application ships with a frozen list of 12,256 official fishstocks in [`src-tauri/resources/fishstock-catalogue.json`](src-tauri/resources/fishstock-catalogue.json), taken from an earlier version of myLFR on 26 August 2026. It seeds a new database and is never applied to an existing one: application updates do not change the list. `npm run catalogue:validate` checks the file's structure and checksum.
+The application ships with a frozen list of 12,256 fishstocks in [`src-tauri/resources/fishstock-catalogue.json`](src-tauri/resources/fishstock-catalogue.json), taken from an earlier version of myLFR on 26 August 2026. It seeds a new database and is never applied to an existing one: application updates do not change the list. `npm run catalogue:validate` checks the file's structure and checksum.
 
-New fishstocks appear over time, and receivers add them themselves on the Species page, choosing how each is measured and which fishing year it belongs to. Official stocks are read-only. A receiver can edit or remove only stocks they added; a stock's code and reporting unit lock once a landing uses it, and nothing a landing uses is ever deleted.
+New fishstocks appear over time, and receivers add them themselves on the Species page, choosing how each is measured and which fishing year it belongs to. Built-in stocks are read-only. A receiver can edit or remove only stocks they added; a stock's code and reporting unit lock once a landing uses it, and nothing a landing uses is ever deleted.
 
-Restoring a backup re-establishes the official stocks from the bundled list, because a backup file is untrusted. Receiver-added stocks are kept, after each passes the same validation as one added in the app.
+Restoring a backup re-establishes the built-in stocks from the bundled list, because a backup file is untrusted. Receiver-added stocks are kept, after each passes the same validation as one added in the app.
 
 Fishstocks do not all share one fishing year. Which catalogue stocks fall in the October, April, and February years, and how receiver-added stocks are handled, are in [docs/fishing-year-rules.md](docs/fishing-year-rules.md).
 

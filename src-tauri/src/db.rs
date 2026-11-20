@@ -1519,7 +1519,7 @@ fn get_user_fishstock(connection: &Connection, code: &str) -> AppResult<UserFish
         .ok_or_else(|| AppError::NotFound(format!("Fishstock {code} was not found.")))?;
     if !is_user_added {
         return Err(AppError::Validation(format!(
-            "{code} is part of the official fishstock list, which can't be changed."
+            "{code} is part of the built-in fishstock list, which can't be changed."
         )));
     }
     Ok(connection.query_row(
