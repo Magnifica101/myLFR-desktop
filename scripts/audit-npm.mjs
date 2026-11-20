@@ -11,13 +11,8 @@ const root = resolve(import.meta.dirname, '..');
 
 /** Advisory ID → the only package it is allowed for, and why. */
 const ALLOWED = {
-  'GHSA-fc5q-39xc-vjpf': {
-    package: 'picomatch',
-    reason:
-      'ReDoS in extglob patterns, every version up to 4.0.7, no patched release (checked 2026-11-18). ' +
-      'picomatch is used only by the build and test tools (Vite, Vitest, tinyglobby, fdir), is not in ' +
-      'the installed application, and only ever matches patterns from our own build configuration.',
-  },
+  // None at present. GHSA-fc5q-39xc-vjpf (picomatch) was allowed here until
+  // GitHub withdrew the advisory on 2026-11-18.
 };
 
 const audit = spawnSync('npm', ['audit', '--include=dev', '--json'], {
