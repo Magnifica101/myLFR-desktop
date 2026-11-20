@@ -27,7 +27,7 @@
     "@tauri-apps/api": "^2.12.1",
     "exceljs": "^4.4.0",
     "lucide-react": "^1.51.0",
-    "pdfmake": "^0.2.20",
+    "pdfmake": "^0.3.14",
     "react": "^19.2.8",
     "react-dom": "^19.2.8",
     "react-router-dom": "^7.18.4"
@@ -37,7 +37,7 @@
     "@testing-library/jest-dom": "^7.0.1",
     "@testing-library/react": "^16.3.3",
     "@testing-library/user-event": "^14.6.7",
-    "@types/pdfmake": "^0.2.9",
+    "@types/pdfmake": "^0.3.3",
     "@types/react": "^19.2.17",
     "@types/react-dom": "^19.2.3",
     "@vitejs/plugin-react": "^6.3.0",
