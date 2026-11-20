@@ -1,6 +1,6 @@
 # myLFR Desktop
 
-myLFR Desktop is free Windows software for Licensed Fish Receivers (LFRs). It gives you an easy way to record the fish you receive from each permit holder and vessel, and turns those records into the monthly figures you need for your Licensed Fish Receiver Return (LFRR). myLFR prepares the figures; you still check them and file your return with FishServe yourself.
+myLFR Desktop is free Windows software for New Zealand Licensed Fish Receivers (LFRs). It gives you an easy way to record the fish you receive from each permit holder and vessel, and turns those records into the monthly figures you need for your Licensed Fish Receiver Return (LFRR). myLFR prepares the figures; you still check them and file your return with FishServe yourself.
 
 Your records stay on your own computer. There is no account to set up, and your records are never sent over the internet. Each installation is for one LFR business.
 
