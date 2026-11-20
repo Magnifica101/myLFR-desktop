@@ -12,7 +12,7 @@ Your records stay on your own computer. There is no account to set up, and your 
 2. **There is no warranty.** Because myLFR is free and in the public domain, it is provided as it is, with no promise that it is free of mistakes or right for your business. As far as the law allows, nobody involved in making it is responsible for any loss that comes from using it.
 3. **It is not an official product.** myLFR is not made by, connected with, or endorsed by Fisheries New Zealand, the Ministry for Primary Industries, or FishServe.
 4. **Your records stay on this computer.** myLFR never sends your records anywhere. Keeping backups is up to you: choose a backup folder in Settings, ideally on a USB drive, OneDrive or other cloud storage.
-5. **Support is not guaranteed.** You can report problems on GitHub, and the maintainer will look at them when they can.
+5. **Support is not guaranteed.** You can report problems on GitHub but fixes are not guaranteed.
 
 ## What myLFR does
 
@@ -23,7 +23,7 @@ Your records stay on your own computer. There is no account to set up, and your 
 - If you change or delete a landing, myLFR keeps a copy of how it was before.
 - Find any landing by date, permit holder, vessel, fish or invoice number.
 - Keep a list of your permit holders and their vessels. A vessel used by more than one permit holder only needs entering once.
-- All 12,256 fishstock codes are built in. Mark the ones you use most as favourites, and add new codes yourself.
+- 12,256 fishstock codes are built in. Mark the ones you use most as favourites, and add new codes yourself.
 - Greenweight, scallop meatweight and counted fish are always added up separately, never mixed.
 
 **Returns and reports**
@@ -124,7 +124,7 @@ The workflow has three signing modes:
 - `unsigned` for public releases;
 - `production` for a publicly trusted certificate, if one is ever adopted.
 
-Every run uploads its packages as a private GitHub Actions artifact. With `publish` enabled, an `unsigned` or `production` run also creates a **draft** GitHub release tagged `v<version>` with the installer, its `.sig`, `latest.json` and `SHA256SUMS.txt`. A draft is invisible to receivers and to the updater until the maintainer reviews and publishes it. The workflow rejects any attempt to publish a pilot-signed build. The signing job also records a GitHub build provenance attestation for the installer, which anyone can check with `gh attestation verify <installer> --repo Magnifica101/myLFR-desktop`.
+Every run uploads its packages as a private GitHub Actions artifact. With `publish` enabled, an `unsigned` or `production` run also creates a **draft** GitHub release tagged `v<version>` with the installer, its `.sig`, `latest.json` and `SHA256SUMS.txt`. A draft is invisible to receivers and to the updater until it is reviewed and published on GitHub. The workflow rejects any attempt to publish a pilot-signed build. The signing job also records a GitHub build provenance attestation for the installer, which anyone can check with `gh attestation verify <installer> --repo Magnifica101/myLFR-desktop`.
 
 The protected `signing` environment holds only signing secrets:
 

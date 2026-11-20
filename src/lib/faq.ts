@@ -570,7 +570,7 @@ export const FAQ_GROUPS: FaqGroup[] = [
         id: 'support',
         question: 'Is there someone I can phone or email?',
         answer: [
-          'No. myLFR is free software with no support line or email address. Reporting on GitHub is the only way to tell the maintainer about a problem, and they look at reports when they can. Help isn\'t guaranteed.',
+          'No. myLFR is free software with no support line or email address. The only way to report a problem is on GitHub, through **Settings → Bug report**. Replies and fixes aren\'t guaranteed.',
         ],
       },
       {

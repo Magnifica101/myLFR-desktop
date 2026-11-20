@@ -1,8 +1,8 @@
 # Reading crash reports
 
-myLFR records crashes in its diagnostics log, which reaches the maintainer
-only when a receiver copies the problem report (Settings → Bug report) into a
-GitHub issue. Nothing is sent automatically. This page explains the crash
+myLFR records crashes in its diagnostics log. A crash record leaves the
+computer only when a receiver copies the problem report (Settings → Bug report)
+into a GitHub issue. Nothing is sent automatically. This page explains the crash
 entries in that report and how to turn their stack traces into function names
 and source lines.
 
