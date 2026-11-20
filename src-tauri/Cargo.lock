@@ -2191,7 +2191,7 @@ dependencies = [
 
 [[package]]
 name = "mylfr-desktop"
-version = "0.8.0"
+version = "1.0.0"
 dependencies = [
  "base64 0.22.1",
  "chrono",
