@@ -41,7 +41,7 @@ expect(!/npm (?:run )?(?:test|build|desktop:build)\b/.test(signing) && !/cargo t
 expect(signing.indexOf('npm ci --ignore-scripts') < signing.indexOf('secrets.'), 'dependencies must be installed before signing secrets are introduced');
 expect((release.match(/TAURI_SIGNING_PRIVATE_KEY:/g) ?? []).length === 1, 'updater private key must be scoped to one bundle step');
 expect(!/netlify/i.test(publish), 'publication must not deploy to Netlify');
-expect(publish.includes('gh release create') && publish.includes('--draft'), 'publication must create a draft GitHub release for the maintainer to review');
+expect(publish.includes('gh release create') && publish.includes('--draft'), 'publication must create a draft GitHub release to be reviewed before it is published');
 expect(!publish.includes('secrets.'), 'publication must not receive signing or deployment secrets');
 expect(release.includes("inputs.publish && inputs.signing_mode == 'pilot-self-signed'"), 'release workflow must reject publishing pilot-signed builds');
 expect(signing.includes('actions/attest-build-provenance@'), 'signing job must attest the installer build provenance');

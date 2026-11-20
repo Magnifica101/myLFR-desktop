@@ -324,7 +324,7 @@ jobs:
           name: mylfr-desktop-windows-${{ inputs.signing_mode }}
           path: release
       # A draft is invisible to receivers and to the updater's "latest" link
-      # until the maintainer reviews and publishes it on GitHub.
+      # until it is reviewed and published on GitHub.
       - name: Create a draft GitHub release
         shell: pwsh
         env:

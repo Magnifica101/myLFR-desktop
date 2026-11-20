@@ -27,9 +27,8 @@ every installed copy.
 This applies in particular to anything that could get around updater signature
 verification, Authenticode checks, or backup validation before restore.
 
-The maintainer aims to acknowledge a report within 14 days. This is a
-one-person project maintained on a best-effort basis, so no fix time is
-promised; you will be told what is planned once the report has been assessed.
+No response time, reply or fix is guaranteed. myLFR is free software provided
+as is.
 
 Do not attach a production database or backup to a report; use the sanitized
 problem report from **Settings → Bug report** instead.

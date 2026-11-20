@@ -22,7 +22,7 @@ export function NoticeContent({ firstRun = false }: { firstRun?: boolean }) {
       <li><strong>There is no warranty.</strong> Because myLFR is free and in the public domain, it is provided as it is, with no promise that it is free of mistakes or right for your business. As far as the law allows, nobody involved in making it is responsible for any loss that comes from using it.</li>
       <li><strong>It is not an official product.</strong> myLFR is not made by, connected with, or endorsed by Fisheries New Zealand, the Ministry for Primary Industries, or FishServe.</li>
       <li><strong>Your records stay on this computer.</strong> myLFR never sends your records anywhere. Keeping backups is up to you: choose a backup folder in Settings, ideally on a USB drive, OneDrive or other cloud storage.</li>
-      <li><strong>Support is not guaranteed.</strong> You can report problems on GitHub, and the maintainer will look at them when they can.</li>
+      <li><strong>Support is not guaranteed.</strong> You can report problems on GitHub but fixes are not guaranteed.</li>
     </ol>
   </div>;
 }
