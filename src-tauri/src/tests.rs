@@ -1956,6 +1956,48 @@ fn backup_validation_rejects_attacker_defined_schema_and_triggers() {
 }
 
 #[test]
+fn backup_restore_accepts_windows_line_endings_in_stored_schema() {
+    let directory = TempDir::new().unwrap();
+    let backups = TempDir::new().unwrap();
+    let mut database = open_database(&directory);
+    let fisher = fisher(&mut database, "RESTORE-CRLF");
+    landing_with(&mut database, &fisher.id, "2026-08-09", "HOK1", 100);
+    backup::set_backup_directory(&mut database, backups.path()).unwrap();
+    let backup_path = backup::backup_now(&mut database, "0.8.0").unwrap();
+    landing_with(&mut database, &fisher.id, "2026-08-10", "SNA1", 200);
+
+    // A build from a Windows checkout can embed the migrations with CRLF line
+    // endings, so a real database can hold some tables' SQL with CRLF and the
+    // rest with LF. Such a backup is genuine and must restore.
+    let crafted = backups.path().join("crlf-schema.mylfr-backup");
+    rewrite_backup_database(&backup_path, &crafted, |connection| {
+        connection
+            .execute_batch(
+                "PRAGMA writable_schema = ON;
+                 UPDATE sqlite_schema
+                    SET sql = replace(sql, char(10), char(13) || char(10))
+                  WHERE name IN ('app_settings', 'fishstock_codes');
+                 PRAGMA writable_schema = OFF;",
+            )
+            .unwrap();
+        let crlf_objects: i64 = connection
+            .query_row(
+                "SELECT count(*) FROM sqlite_schema WHERE instr(sql, char(13)) > 0",
+                [],
+                |row| row.get(0),
+            )
+            .unwrap();
+        assert_eq!(crlf_objects, 2);
+    });
+
+    backup::validate_backup(&crafted).unwrap();
+    backup::restore_backup(&mut database, &crafted, &seed()).unwrap();
+    let report = database.report(Default::default()).unwrap();
+    assert_eq!(report.fish_type_rows.len(), 1);
+    assert_eq!(report.fish_type_rows[0].quantity, 100);
+}
+
+#[test]
 fn backup_restore_rejects_hidden_triggers_without_changing_live_data() {
     let directory = TempDir::new().unwrap();
     let backups = TempDir::new().unwrap();

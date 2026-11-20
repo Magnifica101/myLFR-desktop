@@ -1,0 +1,4 @@
+# Database migrations are embedded in the app and their SQL is stored in every
+# database. Keep them byte-identical on every checkout, including Windows and
+# the Windows release runner, so every build stores the same schema text.
+*.sql text eol=lf
