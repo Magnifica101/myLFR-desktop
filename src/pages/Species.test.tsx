@@ -96,6 +96,60 @@ describe('Species', () => {
     ]));
   });
 
+  it('says straight away when a typed code is already in the list, and offers to make it a favourite', async () => {
+    let favourite = false;
+    const favouriteCalls: unknown[] = [];
+    setDesktopTransportForTests(async <T,>(command: string, args?: Record<string, unknown>) => {
+      if (command === 'list_favorite_fishstocks' || command === 'list_user_fishstocks') return [] as T;
+      if (command === 'search_fishstocks') {
+        const stocks = [{ ...snapper, isFavorite: favourite }, { ...snapper, code: 'SNA10', description: 'Snapper Kermadec' }];
+        return stocks.filter((stock) => stock.code.startsWith(String(args?.query))) as T;
+      }
+      if (command === 'set_fishstock_favorite') {
+        favouriteCalls.push(args);
+        favourite = args?.favorite === true;
+        return null as T;
+      }
+      throw new Error(`Unexpected command: ${command}`);
+    });
+    const user = userEvent.setup();
+    renderSpecies();
+
+    await user.click(await screen.findByRole('button', { name: 'Add a fishstock' }));
+    await user.type(screen.getByLabelText('Fishstock code'), 'sna1');
+    const taken = await screen.findByRole('status');
+    expect(taken).toHaveTextContent("SNA1 is already in the list: Snapper Auckland (East). You don't need to add it.");
+    expect(screen.getByLabelText('Fishstock code')).toHaveAttribute('aria-invalid', 'true');
+    expect(screen.getByRole('button', { name: 'Add fishstock' })).toBeDisabled();
+
+    await user.click(screen.getByRole('button', { name: 'Add SNA1 to favourites' }));
+    expect(favouriteCalls).toEqual([{ code: 'SNA1', favorite: true }]);
+    expect(await screen.findByText("It's already one of your favourites.")).toBeVisible();
+
+    // A code that isn't in the list clears the message and allows saving again.
+    await user.type(screen.getByLabelText('Fishstock code'), '1');
+    await waitFor(() => expect(screen.queryByRole('status')).not.toBeInTheDocument());
+    expect(screen.getByRole('button', { name: 'Add fishstock' })).toBeEnabled();
+  });
+
+  it('names a code the receiver added themselves as their own', async () => {
+    const own: Fishstock = { ...snapper, code: 'NEW1', description: 'Receiver stock', isUserAdded: true, isFavorite: true };
+    setDesktopTransportForTests(async <T,>(command: string, args?: Record<string, unknown>) => {
+      if (command === 'list_favorite_fishstocks' || command === 'list_user_fishstocks') return [] as T;
+      if (command === 'search_fishstocks') return (String(args?.query) === 'NEW1' ? [own] : []) as T;
+      throw new Error(`Unexpected command: ${command}`);
+    });
+    const user = userEvent.setup();
+    renderSpecies();
+
+    await user.click(await screen.findByRole('button', { name: 'Add a fishstock' }));
+    await user.type(screen.getByLabelText('Fishstock code'), 'NEW1');
+    expect(await screen.findByRole('status')).toHaveTextContent('NEW1 is already in the list (added by you): Receiver stock.');
+    expect(screen.getByText("It's already one of your favourites.")).toBeVisible();
+    expect(screen.queryByRole('button', { name: /to favourites/ })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Add fishstock' })).toBeDisabled();
+  });
+
   it('locks the code and unit of a stock that landings use, and cannot remove it', async () => {
     const used: UserFishstock = {
       code: 'NEW1', description: 'Receiver stock', reportingUnit: 'greenweightKg',
