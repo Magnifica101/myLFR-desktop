@@ -57,7 +57,15 @@ assert.equal(
 );
 
 const targets = await fetch(`http://127.0.0.1:${port}/json/list`).then((response) => response.json());
-const target = targets.find((entry) => entry.type === 'page' && entry.url.startsWith('http://tauri.localhost'));
+// Match the app's exact origin, not a prefix: `http://tauri.localhost.example` must not count.
+const isMyLfrPage = (url) => {
+  try {
+    return new URL(url).origin === 'http://tauri.localhost';
+  } catch {
+    return false;
+  }
+};
+const target = targets.find((entry) => entry.type === 'page' && isMyLfrPage(entry.url));
 assert(target, 'The myLFR WebView CDP target was not found.');
 
 const socket = new WebSocket(target.webSocketDebuggerUrl);
