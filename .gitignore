@@ -8,7 +8,6 @@ tools/*/target/
 !.env.example
 *.log
 .DS_Store
-.netlify/
 
 # Generated data/diagnostics exports
 myLFR-*.json
