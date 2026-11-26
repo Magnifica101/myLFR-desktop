@@ -82,7 +82,7 @@ npm run desktop:dev
 `npm run desktop:dev` merges `src-tauri/tauri.dev.conf.json`, which uses the separate
 `nz.co.mylfr.desktop.dev` application identifier. Development therefore opens its own
 `mylfr.sqlite3` in the platform's local application-data directory instead of the installed
-pilot application's database. Release builds continue to use `nz.co.mylfr.desktop`.
+application's database. Release builds continue to use `nz.co.mylfr.desktop`.
 
 The `--no-default-features` Rust test target exercises the database and backup/restore without requiring a graphical Linux Tauri runtime. Windows installers are built in Windows CI.
 
@@ -130,17 +130,16 @@ The protected `signing` environment holds only signing secrets:
 
 - `PILOT_WINDOWS_CERTIFICATE_BASE64`
 - `PILOT_WINDOWS_CERTIFICATE_PASSWORD`
-- `WINDOWS_CERTIFICATE_BASE64`
-- `WINDOWS_CERTIFICATE_PASSWORD`
 - `TAURI_SIGNING_PRIVATE_KEY`
 - `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`
 
 The protected `production` environment holds no secrets; its publication job uses the workflow's own GitHub token with permission only to create the draft release.
 
-Repository variables available to the secretless build pin public identities:
+A repository variable available to the secretless build pins the pilot certificate's public identity:
 
 - `PILOT_WINDOWS_CERTIFICATE_THUMBPRINT`
-- `WINDOWS_CERTIFICATE_THUMBPRINT`
+
+`production` mode would also need the secrets `WINDOWS_CERTIFICATE_BASE64` and `WINDOWS_CERTIFICATE_PASSWORD` and the variable `WINDOWS_CERTIFICATE_THUMBPRINT`. None of these is set, because no publicly trusted certificate has been adopted.
 
 The workflow builds and tests without secrets, then imports the selected Authenticode certificate only in the isolated signing and bundling job. For signed modes it verifies the executable and installer against the pinned signer and removes imported signing material. It then writes `latest.json`, pointing at the installer's GitHub release download, and `SHA256SUMS.txt`. A separate protected publication job creates the draft GitHub release.
 
@@ -158,4 +157,4 @@ Pull requests run:
 - Rust migration, constraint, landing transaction/revision, fishstock, update, checksum, and backup/restore tests;
 - Rust migration compatibility tests covering every supported schema, older-schema backup restore, future-schema rejection, and failed-migration version safety.
 
-A production candidate must additionally be installed and smoke-tested on a current Windows 11 x64 machine, including offline use, print/PDF, update, backup, and replacement-PC restore. Windows 10 testing was waived on 2026-08-28 because no Windows 10 machine is available.
+A release candidate must additionally be installed and tested on a current Windows 11 x64 machine, including offline use, print/PDF, update, backup, and replacement-PC restore. myLFR is tested on Windows 11. Windows 10 22H2 should work but has not been tested.
